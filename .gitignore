@@ -1,0 +1,20 @@
+# Compiled object files
+*.o
+
+# Executables
+test_ex1
+test_ex2
+test_ex3
+demo_matrices
+
+# Result output files (generated at runtime)
+R.txt
+*.out
+
+# Editor artifacts
+*.swp
+*~
+.vscode/
+
+# Windows
+Thumbs.db
