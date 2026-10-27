@@ -4,11 +4,13 @@ INSA Centre Val de Loire · 3e année STI · Programmation C · A. ADELL
 
 **Groupe :** NGUYEN Xuan Duc, PHAM Nguyen Khanh Huy, HUYNH Gia Quy (responsable du groupe).
 
-**Comptes GitHub :** NGUYEN Xuan Duc : [nguyenxuanduc-vn](https://github.com/nguyenxuanduc-vn) ; PHAM Nguyen Khanh Huy : [khanhuy06](https://github.com/khanhuy06) ; HUYNH Gia Quy : [quy0901147933](https://github.com/quy0901147933).`n`n**Dépôt :** https://github.com/quy0901147933/Programmation_C
+**Comptes GitHub :** NGUYEN Xuan Duc : [nguyenxuanduc-vn](https://github.com/nguyenxuanduc-vn) ; PHAM Nguyen Khanh Huy : [khanhuy06](https://github.com/khanhuy06) ; HUYNH Gia Quy : [quy0901147933](https://github.com/quy0901147933).
+
+**Dépôt :** https://github.com/quy0901147933/Programmation_C
 
 ## 1. Introduction
 
-Ce projet réalise une bibliothèque de matrices d'entiers de dimensions variables. Elle permet l'allocation et la destruction des matrices, leur lecture et leur écriture dans un fichier texte, ainsi que leur addition et leur multiplication. Le programme `demo_matrices` utilise ces modules. Les contrôles ci-dessous ont été effectués sur une copie de travail sous Ubuntu 22.04, avec GCC et Valgrind ; ils mettent aussi en évidence une anomalie de multiplication, décrite plus bas.
+Ce projet réalise une bibliothèque de matrices d'entiers de dimensions variables. Elle permet l'allocation et la destruction des matrices, leur lecture et leur écriture dans un fichier texte, ainsi que leur addition et leur multiplication. Le programme `demo_matrices` utilise ces modules. Les contrôles ci-dessous ont été effectués sur une copie de travail sous Ubuntu 22.04, avec GCC et Valgrind ; ils comprennent également des cas de multiplication rectangulaire valides et invalides.
 
 ## 2. Conception
 
@@ -62,7 +64,7 @@ La lecture vérifie les dimensions et les coefficients avant de transmettre la m
 
 ### Exercice 3 — Calcul matriciel
 
-L'addition vérifie les paramètres et les dimensions, calcule les coefficients dans un type plus large et vérifie leur intervalle. La multiplication accumule les produits dans `long long`, vérifie les dépassements et alloue une matrice résultat. **Limite constatée :** la condition de compatibilité de la multiplication compare actuellement le nombre de lignes de A au nombre de colonnes de B, au lieu de comparer les colonnes de A aux lignes de B. Les tests fournis passent, mais certains cas rectangulaires échouent ou produisent un accès mémoire invalide ; voir la démonstration.
+L'addition vérifie les paramètres et les dimensions, calcule les coefficients dans un type plus large et vérifie leur intervalle. La multiplication accumule les produits dans `long long`, vérifie les dépassements et alloue une matrice résultat. La compatibilité est vérifiée en comparant le nombre de colonnes de A au nombre de lignes de B ; des cas rectangulaires supplémentaires ont été vérifiés sous Valgrind.
 
 **Q5.1** Non. `const Matrice *a` empêche de modifier les champs de la structure à travers `a`, mais ne rend pas constants les entiers désignés par `a->coef`. Pour interdire l'écriture des coefficients via une interface de lecture, il faut exposer un accès dont les valeurs pointées sont `const`, par exemple au moyen d'une interface adaptée ; ajouter `const` au seul pointeur de structure ne suffit pas.
 
@@ -72,7 +74,7 @@ L'addition vérifie les paramètres et les dimensions, calcule les coefficients 
 
 **Q5.4** Un dépassement d'un `int` signé est un comportement indéfini en C : le programme ne peut pas compter sur le résultat pour détecter l'erreur après coup. L'addition utilise ici un type plus large puis vérifie que le résultat appartient à l'intervalle de `int`.
 
-**Test fourni :** `test_ex3` affiche 14 / 14 vérifications réussies. Ce bilan ne couvre pas les dimensions rectangulaires citées ci-dessus.
+**Test fourni :** `test_ex3` affiche 14 / 14 vérifications réussies. Des tests supplémentaires de dimensions rectangulaires ont aussi été réalisés.
 
 ### Exercice 4 — Programme de démonstration
 
@@ -88,7 +90,7 @@ Le programme charge les deux matrices, les affiche, appelle l'opération demand�
 
 Sous Ubuntu 22.04, `valgrind --leak-check=full` sur chacun des trois tests fournis indique `All heap blocks were freed` et `ERROR SUMMARY: 0 errors`. La même vérification sur une addition réussie et sur la lecture du fichier invalide indique aussi zéro erreur et aucune allocation restante.
 
-Ces résultats ne couvrent pas tous les scénarios. Avec une multiplication incompatible `2 × 3` par `2 × 2`, le contrôle actuel accepte les dimensions ; Valgrind signale des lectures invalides dans `mat_multiplier`, suivies d'un arrêt par `SIGSEGV`. Ce cas ne doit pas être présenté comme une exécution propre.
+Sur une multiplication valide `4 × 3` par `3 × 2` et une multiplication incompatible `2 × 3` par `2 × 2`, Valgrind indique également zéro erreur et aucune allocation restante. Le cas incompatible est refusé avec un code de retour 1.
 
 ## 5. Démonstration finale
 
@@ -118,7 +120,7 @@ $ echo $?
 0
 ```
 
-### Multiplication valide refusée
+### Multiplication valide
 
 ```text
 $ ./demo_matrices mul donnees/A.txt donnees/C.txt R.txt
@@ -131,12 +133,17 @@ B (3 x 2) :
         1        0
         0        1
         2       -1
-Erreur : calcul impossible : dimensions incompatibles (A : 4 x 3, B : 3 x 2)
+R = A x B (4 x 2) :
+      193      -36
+       37       22
+       65       78
+      -10       17
+Resultat enregistre dans "R.txt".
 $ echo $?
-1
+0
 ```
 
-Ces dimensions sont pourtant compatibles : le résultat attendu a 4 lignes et 2 colonnes. L'ordre d'affichage entre les flux standard et erreur peut varier selon leur mise en tampon.
+Le résultat a 4 lignes et 2 colonnes, comme attendu.
 
 ### Fichier mal formé
 
@@ -149,7 +156,7 @@ $ echo $?
 
 ## 6. Bilan et difficultés
 
-Le projet met en pratique la séparation entre interfaces et implémentations, l'allocation dynamique et la libération sur les chemins d'erreur, les flux et la gestion des erreurs. Les trois tests fournis réussissent sans erreur Valgrind, mais les tests supplémentaires montrent une anomalie importante dans la validation des dimensions de multiplication. Une différence a également été constatée dans l'ordre des inclusions de `matrice_io.h` par rapport au fichier d'origine : les en-têtes devront être strictement identiques pour respecter la consigne.
+Le projet met en pratique la séparation entre interfaces et implémentations, l'allocation dynamique et la libération sur les chemins d'erreur, les flux et la gestion des erreurs. Les trois tests fournis réussissent sans erreur Valgrind ; des cas supplémentaires de multiplication rectangulaire valide et invalide ont été vérifiés après correction du contrôle des dimensions. Une différence a également été constatée dans l'ordre des inclusions de `matrice_io.h` par rapport au fichier d'origine : les en-têtes devront être strictement identiques pour respecter la consigne.
 
 **Répartition déclarée par le groupe :** NGUYEN Xuan Duc : code des exercices 3 et 4 ; HUYNH Gia Quy : code de l'exercice 2, tests Valgrind et Makefile ; PHAM Nguyen Khanh Huy : code de l'exercice 1, rapport et remise.
 

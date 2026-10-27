@@ -58,7 +58,7 @@ MatErreur mat_multiplier(const Matrice *a, const Matrice *b, Matrice *res)
     if (err != MAT_OK)
         return err;
 
-    if (a->nb_lignes != b->nb_colonnes)
+    if (a->nb_colonnes != b->nb_lignes)
         return MAT_ERR_DIMENSIONS;
 
     Matrice r = MATRICE_VIDE;
