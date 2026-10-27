@@ -156,7 +156,7 @@ $ echo $?
 
 ## 6. Bilan et difficultés
 
-Le projet met en pratique la séparation entre interfaces et implémentations, l'allocation dynamique et la libération sur les chemins d'erreur, les flux et la gestion des erreurs. Les trois tests fournis réussissent sans erreur Valgrind ; des cas supplémentaires de multiplication rectangulaire valide et invalide ont été vérifiés après correction du contrôle des dimensions. Une différence a également été constatée dans l'ordre des inclusions de `matrice_io.h` par rapport au fichier d'origine : les en-têtes devront être strictement identiques pour respecter la consigne.
+Le projet met en pratique la séparation entre interfaces et implémentations, l'allocation dynamique et la libération sur les chemins d'erreur, les flux et la gestion des erreurs. Les trois tests fournis réussissent sans erreur Valgrind ; des cas supplémentaires de multiplication rectangulaire valide et invalide ont été vérifiés après correction du contrôle des dimensions. Le fichier `matrice_io.h` a été rétabli conformément à l'en-tête fourni.
 
 **Répartition déclarée par le groupe :** NGUYEN Xuan Duc : code des exercices 3 et 4 ; HUYNH Gia Quy : code de l'exercice 2, tests Valgrind et Makefile ; PHAM Nguyen Khanh Huy : code de l'exercice 1, rapport et remise.
 

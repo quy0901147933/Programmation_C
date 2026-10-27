@@ -12,8 +12,8 @@
 #ifndef MATRICE_IO_H
 #define MATRICE_IO_H
 
-#include "matrice.h"
 #include <stdio.h>
+#include "matrice.h"
 
 /*
  * Lit une matrice depuis le flux f (ouvert en lecture).
