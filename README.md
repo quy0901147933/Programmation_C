@@ -26,7 +26,7 @@ matrice_calcul.c ─> matrice_calcul.h ─> matrice.h
                  └> matrice_alloc.h
 ```
 
-La structure `Matrice` contient les dimensions et un tableau de pointeurs ; chaque pointeur désigne une ligne allouée séparément. `matrice.c` fournit les fonctions communes ; `matrice_alloc.c` gère la mémoire ; `matrice_io.c` traite les flux ; `matrice_calcul.c` réalise les opérations. Le Makefile compile séparément les modules avec `-std=c11 -Wall -Wextra -Wpedantic -g` et construit le programme ; `make test` construit et exécute les trois tests.
+La structure `Matrice` contient les dimensions et un tableau de pointeurs ; chaque pointeur désigne une ligne allouée séparément. `matrice.c` fournit les fonctions communes ; `matrice_alloc.c` gère la mémoire ; `matrice_io.c` traite les flux ; `matrice_calcul.c` réalise les opérations. Le Makefile compile séparément les modules avec `-std=c11 -Wall -Wextra -Wpedantic -g` et construit le programme de démonstration ainsi que les trois programmes de test ; `make test` exécute les trois tests.
 
 ### Propriété de la mémoire
 
@@ -172,4 +172,4 @@ valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/B.txt R.txt
 valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/invalide.txt R.txt
 ```
 
-`make` construit le programme de démonstration ; `make test` construit et exécute les trois programmes de test. Les fichiers de sortie créés pendant les tests ne font pas partie du rendu.
+`make` construit le programme de démonstration et les trois programmes de test ; `make test` construit si nécessaire et exécute les trois tests. Les fichiers de sortie créés pendant les tests ne font pas partie du rendu.

@@ -1,6 +1,6 @@
 # Makefile — TD Stockage de matrices en C
 # Usage :
-#   make            : biên dịch chương trình demo (demo_matrices)
+#   make            : biên dịch demo_matrices và ba chương trình test
 #   make test2      : biên dịch và chạy test Bài 2 (matrice_io)
 #   make test1      : biên dịch và chạy test Bài 1 (matrice_alloc)
 #   make test3      : biên dịch và chạy test Bài 3 (matrice_calcul)
@@ -13,7 +13,7 @@ CFLAGS  = -std=c11 -Wall -Wextra -Wpedantic -g
 # -------------------------------------------------------------
 # Cibles principales
 # -------------------------------------------------------------
-all: demo_matrices
+all: demo_matrices test_ex1 test_ex2 test_ex3
 
 # -------------------------------------------------------------
 # Programme de démonstration final (Exercice 4)
